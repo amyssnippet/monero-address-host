@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Displayed Text</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; padding: 2rem; background:#f7fafc; color:#0f172a; }
+    .container { max-width: 900px; margin: 0 auto; background: #fff; padding: 1.25rem 1.5rem; border-radius: 8px; box-shadow: 0 6px 20px rgba(2,6,23,0.08); }
+    pre { white-space: pre-wrap; word-break: break-word; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace; font-size: 0.95rem; background:#0f172a; color:#e6eef8; padding:1rem; border-radius:6px; overflow:auto; }
+    .controls { margin-top: 0.75rem; display:flex; gap:0.5rem; }
+    button { padding: 0.5rem 0.75rem; border-radius:6px; border:1px solid #cbd5e1; background:#fff; cursor:pointer; font-weight:600; }
+    button:active { transform: translateY(1px); }
+    .note { color:#475569; margin-top:0.5rem; font-size:0.9rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Raw text display</h1>
+    <p class="note">Below is the exact text you provided. Use the buttons to copy or download the file.</p>
+    <pre id="text-block">847VmhHSxt7UmVkKHWm6fZ7qQW7S6n2FebdQEfYagJRVBvVSH38Xmh5FbWG9DWNHcqRSr1NXSbAEREUx9VFJTf9qDrN8hSD</pre>
+    <div class="controls">
+      <button id="copy-btn">Copy to clipboard</button>
+      <a id="download-link" download="display_text.html"><button>Download HTML</button></a>
+    </div>
+  </div>
+
+  <script>
+    const text = document.getElementById('text-block').innerText;
+    document.getElementById('copy-btn').addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(text);
+        alert('Text copied to clipboard');
+      } catch (e) {
+        alert('Copy failed — select and copy manually');
+      }
+    });
+
+    // Create a blob and attach it to the download link so the file downloads with the same content
+    const blob = new Blob([`<!doctype html>
+<html><head><meta charset="utf-8"><title>display_text</title></head><body><pre>${text.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')}</pre></body></html>`], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    document.getElementById('download-link').href = url;
+  </script>
+</body>
+</html>
